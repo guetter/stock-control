@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 public class Estoque {
+    static int numProdutos = 0;
     public static void imprimirMensagem(String msg, int status){
         if(msg.equals("CADASTRAR")){
             switch(status){
@@ -51,6 +52,33 @@ public class Estoque {
             System.out.println("ERRO! Parâmetros informados incorretamente!");
         }
     }
+    public static int cadastrarProduto(String[][] produtos, int codigo, String descricao, int qtd, double preco){
+        if (numProdutos <= 10){
+            numProdutos++;
+
+            return 1; //cadastrado com sucesso
+        }else{
+            return -1; //sem memoria para cadastrar
+        }
+    }
+
+    public static void imprimirProdutos(String[][] produtos){
+        for(int i = 0; i < numProdutos; i++){
+            if(i == 0){
+                System.out.println("======================================");
+            }
+            System.out.println();
+            System.out.println("Código: " + produtos[i][0]);
+            System.out.println();
+            System.out.println("Produto: " + produtos[i][1]);
+            System.out.println();
+            System.out.println("Quantidade: " + produtos[i][2]);
+            System.out.println();
+            System.out.println("Preço: " + produtos[i][3]);
+            System.out.println();
+            System.out.println("======================================");
+        }
+    }
 
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
@@ -71,13 +99,25 @@ public class Estoque {
 
             switch (escolha){
                 case 1:
-                    System.out.println(escolha);
+                    System.out.println("==== CADASTRO ====");
+                    System.out.printf("Digite o código do produto: ");
+                    int codigo = sc.nextInt();
+                    System.out.println("Digite a descrição do produto: ");
+                    String descricao = sc.next();
+                    System.out.printf("Digite a quantidade a ser cadastrada: ");
+                    int qtd = sc.nextInt();
+                    System.out.printf("Digite o preço unitário do produto: ");
+                    double preco = sc.nextDouble();
+
+                    int status = cadastrarProduto(produtos, codigo, descricao, qtd, preco);
+
+                    imprimirMensagem("CADASTRAR", status);
                     break;
                 case 2:
                     System.out.println(escolha);
                     break;
                 case 3:
-                    System.out.println(escolha);
+                    imprimirProdutos(produtos);
                     break;
                 case 4:
                     System.out.println(escolha);
@@ -86,7 +126,6 @@ public class Estoque {
                     System.exit(0);
                     break;
             }
-
         }
     }
 }
