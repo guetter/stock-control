@@ -75,7 +75,41 @@ public class Estoque {
             return -1; //sem memoria para cadastrar
         }
     }
+    public static int excluirProduto(String[][] produtos, int codigo){
+        for(int i = 0; i < numProdutos; i++){
+            if(String.valueOf(codigo).equals(produtos[numProdutos - 1][0])){
+                produtos[i][0] = "";
+                produtos[i][1] = "";
+                produtos[i][2] = "";
+                produtos[i][3] = "";
+                numProdutos--;
 
+                return 1;
+            }
+        }
+
+        return -1;
+    }
+    public static int venderProduto(String[][] produtos, int codigo, int qtd){
+        if(qtd <= 0){
+            return -3;
+        }
+
+        for(int i = 0; i < numProdutos; i++){
+            if(String.valueOf(codigo).equals(produtos[numProdutos - 1][0])){
+                int qtdPrevia = Integer.parseInt(produtos[i][2]);
+                if(qtdPrevia >= qtd){
+                    int qtdNova = qtdPrevia - qtd;
+                    produtos[i][2] = String.valueOf(qtdNova);
+                    return 1;
+                }else{
+                    return -1; //sem qtd em estoque
+                }
+            }
+        }
+
+        return -2;
+    }
     public static void imprimirProdutos(String[][] produtos){
         for(int i = 0; i < numProdutos; i++){
             if(i == 0){
@@ -99,7 +133,7 @@ public class Estoque {
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
         String[][] produtos = new String[10][4];
-        int codigo, qtd;
+        int codigo, qtd, status;
         String descricao;
         double preco;
 
@@ -127,7 +161,7 @@ public class Estoque {
                     System.out.print("Digite o preço unitário do produto: ");
                     preco = sc.nextDouble();
 
-                    int status = cadastrarProduto(produtos, codigo, descricao, qtd, preco);
+                    status = cadastrarProduto(produtos, codigo, descricao, qtd, preco);
 
                     imprimirMensagem("CADASTRAR", status);
                     break;
@@ -136,12 +170,23 @@ public class Estoque {
                     System.out.print("Digite o código do produto: ");
                     codigo = sc.nextInt();
 
+                    status = excluirProduto(produtos, codigo);
+
+                    imprimirMensagem("EXCLUIR", status);
                     break;
                 case 3:
                     imprimirProdutos(produtos);
                     break;
                 case 4:
-                    System.out.println(escolha);
+                    System.out.println("=============== VENDA ================");
+                    System.out.print("Digite o código do produto: ");
+                    codigo = sc.nextInt();
+                    System.out.print("Digite a quantidade vendida: ");
+                    qtd = sc.nextInt();
+
+                    status = venderProduto(produtos, codigo, qtd);
+
+                    imprimirMensagem("VENDER", status);
                     break;
                 default:
                     System.exit(0);
